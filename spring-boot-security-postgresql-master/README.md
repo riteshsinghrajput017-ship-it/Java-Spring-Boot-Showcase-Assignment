@@ -1,66 +1,251 @@
-# 📡 Public API Gateway App – Consumer & Dashboard Portal
 
-A full-stack Spring Boot application where users can:
 
--  Sign up and log in using **JWT token-based authentication**
--  Add URLs of **public JSON APIs**
--  Fetch and **store responses** of those APIs under their profile
--  View a personal **dashboard** of saved API responses
+* ✅ Setup steps
+* ✅ Screenshots (Postman or UI)
+* ✅ API testing (registration, login, save API, fetch response)
+* ✅ CI/CD & hosting
+* ✅ Factory Pattern explanation
+* ✅ Full configuration guide for new developers
 
-Each user can only access **their own saved URLs and results**.
 
----
 
-##  Tech Stack
+## 📌 Features
 
-| Layer         | Technology               |
-|---------------|--------------------------|
-| Backend       | Java (Spring Boot)       |
-| Auth          | JWT (JSON Web Tokens)    |
-| Database      | PostgreSQL               |
-| ORM           | Spring Data JPA / Hibernate |
-| Build Tool    | Maven or Gradle          |
-| Server Port   | 8088                     |
-| API Protocol  | REST (JSON)              |
+- 🔐 User Registration & Login with JWT token-based authentication
+- 🌐 Add public JSON API URLs and save responses
+- 📦 Store all user data, APIs, and responses in PostgreSQL
+- 🧠 Uses Factory Pattern for handling different API parsing strategies
+- ✅ Clean MVC structure (Controller, Service, Repository)
+- 🔧 Deployed using Render (or Railway/Fly.io)
+- 🔄 CI/CD pipeline setup with GitHub Actions (or GitLab CI)
 
 ---
 
-##  Configuration & Setup
+## 🚀 Getting Started
 
-Before running the application, ensure you have configured the following environment or application variables.
+### 1️⃣ Clone the Repository
 
-You can define them in:
+```bash
+git clone https://github.com/riteshsinghrajput017-ship-it/Java-Spring-Boot-Showcase-Assignment.git
+cd Java-Spring-Boot-Showcase-Assignment
+````
 
-- `.env` file (if you're using dotenv support)
-- `application.properties` (for Spring Boot apps)
-- Directly in your deployment environment
+### 2️⃣ Setup Environment Variables
 
----
-
-###  Environment Variables
-
-| Variable Name        | Description |
-|----------------------|-------------|
-| `DB_URL`             | JDBC connection string to your PostgreSQL database. <br> Example: `jdbc:postgresql://localhost:5432/testdb` |
-| `DB_USERNAME`        | Username to connect to your PostgreSQL DB. <br> Default: `postgres` |
-| `DB_PASSWORD`        | Password to connect to your PostgreSQL DB. <br> Default: `postgres` |
-| `JWT_EXPIRATION_MS`  | Validity period for JWT tokens in milliseconds. <br> `86400000` = 24 hours |
-| `SERVER_PORT`        | The port number on which the Spring Boot server will run. <br> Default: `8088` |
-
----
-
-###  Sample `application.properties`
+Edit `application.properties`:
 
 ```properties
-# PostgreSQL DB Config
-spring.datasource.url=jdbc:postgresql://localhost:5432/testdb
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+# PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/your_db
+spring.datasource.username=your_username
+spring.datasource.password=your_password
 
-# JWT Config
-jwt.expiration.ms=86400000
+# JWT
+app.jwtSecret=your_jwt_secret_key
+app.jwtExpirationMs=3600000
+```
 
-# Server Config
-server.port=8088
+---
+
+## 🛠️ Build & Run Locally
+
+```bash
+./mvnw clean install
+./mvnw spring-boot:run
+```
+
+OR
+
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+
+---
+
+## 📬 API Endpoints
+
+| Method | Endpoint             | Description                   |
+| ------ | -------------------- | ----------------------------- |
+| POST   | `/api/auth/register` | Register new user             |
+| POST   | `/api/auth/login`    | Authenticate & get JWT token  |
+| POST   | `/api/url/add`       | Save public API URL           |
+| GET    | `/api/url/all`       | Fetch all saved API responses |
+
+> ✅ All protected endpoints require `Authorization: Bearer <token>` in headers
+
+---
+
+## 🧪 Sample API Usage (Postman)
+
+### ✅ 1. Register User
+
+**POST** `/api/auth/register`
+
+**Request Body:**
+
+```json
+{
+  "username": "ritesh",
+  "email": "ritesh@example.com",
+  "password": "secure123"
+}
+```
+
+
+
+📷 *Screenshot: user registered successfully*
+
+
+---
+
+### ✅ 2. Login to Get Token
+
+**POST** `/api/auth/login`
+
+**Request Body:**
+
+```json
+{
+  "username": "ritesh",
+  "password": "secure123"
+}
+```
+
+**Response:**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI..."
+}
+```
+
+📷 *Screenshot: JWT token received*
+
+---
+
+### ✅ 3. Add Public API URL
+
+**POST** `/api/url/add`
+**Headers:**
+
+```
+Authorization: Bearer <your_token>
+```
+
+**Body:**
+
+```json
+{
+  "url": "https://jsonplaceholder.typicode.com/todos/1"
+}
+```
+
+📷 *Screenshot: API saved successfully*
+
+---
+
+### ✅ 4. Fetch Stored Responses
+
+**GET** `/api/url/all`
+**Headers:**
+
+```
+Authorization: Bearer <your_token>
+```
+
+📷 *Screenshot: Response with list of saved API responses*
+
+---
+
+## 🧱 Factory Pattern Explained
+
+We implemented a **Service Factory** to handle different API response strategies.
+
+Example:
+
+* `JsonPlaceholderService` for JSONPlaceholder
+* `WeatherApiService` for OpenWeatherMap
+
+The factory chooses the parser implementation at runtime based on the API source.
+
+---
+
+## 🏗️ Project Structure (MVC)
+
+```
+src/
+├── controller/
+├── service/
+│   ├── factory/
+│   ├── impl/
+├── model/
+├── dto/
+├── repository/
+├── security/
+│   ├── JWTFilter
+│   └── AuthEntryPoint
+└── config/
+```
+
+---
+
+## 🔐 JWT Security Flow
+
+* Login/Register returns a JWT token.
+* All secured endpoints check the token using a filter.
+* Token is passed in `Authorization: Bearer <token>` header.
+
+---
+
+## 🧵 CI/CD
+
+CI/CD pipeline is configured using **GitHub Actions** or **GitLab CI** to:
+
+* Run build and tests on every push
+* Auto-deploy to Render (or Railway)
+
+📷 *Screenshot: CI pipeline execution*
+
+
+
+## 📸 Screenshots (Postman)
+
+* ✅ User registered
+* ✅ JWT token received
+* ✅ API added
+* ✅ Response fetched
+
+> Add these images in a `/screenshots` folder and reference like:
+
+
+![Token-Username-Passwors Fetched](https://github.com/user-attachments/assets/2d11cf0a-abf1-4edb-b20e-9c3ac5710d66)
+![Token-Username-Email Fetched](https://github.com/user-attachments/assets/2c3c18e7-0590-4f47-a5a7-7465a7693da5)
+![ID-URL Fetched Succesfully](https://github.com/user-attachments/assets/4da0bf76-e2f7-476a-b33f-32a74ba4db82)
+![User Registered Succesfully](https://github.com/user-attachments/assets/97947fd8-911e-4626-9de1-b8c3c10669bd)
+
+## 🧑‍💻 Contributing (for new developers)
+
+1. Clone the repo
+2. Setup your DB & `application.properties`
+3. Register/login to get token
+4. Add your APIs
+5. Check saved data
+6. To test, use Postman collection included in `/postman` folder
+
+---
+
+## 📄 License
+
+This project is for educational showcase purposes.
+
+---
+
+## 📞 Contact
+
+Ritesh Thakur
+📧 [ritesh@example.com](mailto:riteshsinghrajput017@gmail.com)
+🔗 [LinkedIn](https://www.linkedin.com/in/ritesh-thakur-061825251/)
+
+
+
