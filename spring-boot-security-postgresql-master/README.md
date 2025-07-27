@@ -94,7 +94,6 @@ mvn spring-boot:run
 
 
 
-📷 *Screenshot: user registered successfully*
 
 
 ---
@@ -120,7 +119,6 @@ mvn spring-boot:run
 }
 ```
 
-📷 *Screenshot: JWT token received*
 
 ---
 
@@ -141,7 +139,6 @@ Authorization: Bearer <your_token>
 }
 ```
 
-📷 *Screenshot: API saved successfully*
 
 ---
 
@@ -154,7 +151,7 @@ Authorization: Bearer <your_token>
 Authorization: Bearer <your_token>
 ```
 
-📷 *Screenshot: Response with list of saved API responses*
+
 
 ---
 
