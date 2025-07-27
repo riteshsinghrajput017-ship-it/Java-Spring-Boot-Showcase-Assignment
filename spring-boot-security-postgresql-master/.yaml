@@ -10,7 +10,7 @@ variables:
 before_script:
   - echo "Starting CI pipeline..."
 
-# 1️⃣ Build the application
+# 1️ Build the application
 build:
   stage: build
   image: maven:3.9.4-eclipse-temurin-17
@@ -20,14 +20,14 @@ build:
     paths:
       - target/*.jar
 
-# 2️⃣ Run tests
+# 2️ Run tests
 test:
   stage: test
   image: maven:3.9.4-eclipse-temurin-17
   script:
     - mvn test
 
-# 3️⃣ Deploy to Render or any server
+# 3️ Deploy to Render or any server
 deploy:
   stage: deploy
   image: alpine
